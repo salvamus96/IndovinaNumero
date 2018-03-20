@@ -2,14 +2,22 @@ package it.polito.tdp.indonumero;
 
 import java.security.InvalidParameterException;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Model {
 	
 	private int NMAX = 100 ;
 	private int TMAX = 7 ;  //log in base 2 di 100 = 7 circa 
 	
 	private int segreto ; // numero da indovinare
-	private int tentativi ; // tentativi già fatti
 
+	//	private int tentativi ; // tentativi già fatti
+	
+// TRASFORMAZIONE DA INT IN INTEGERPROPERTY	
+	private IntegerProperty tentativi = new SimpleIntegerProperty();
+	
+	
 	// STATO DEL GIOCO DA GESTIRE
 	private boolean inGame; // partita in corso o no?
 	
@@ -29,7 +37,7 @@ public class Model {
     	// MOLTIPLICARE PER NMAX E AGGIUNGO 1 PER PARTIRE DA 1
     	this.segreto = (int) (Math.random() * NMAX) + 1 ;
     	
-    	this.tentativi = 0 ;
+    	this.tentativi.set(0) ;
     	this.inGame = true;
 	}
 	
@@ -48,8 +56,9 @@ public class Model {
 		if (!valoreValido(t))
 			throw new InvalidParameterException("Tentativo fuori range") ;
 		
-		this.tentativi ++ ;
-		if (this.tentativi == TMAX)
+		// AGGIORNAMENTO TENTATIVO
+		this.tentativi.set(this.tentativi.get() + 1);
+		if (this.tentativi.get() == TMAX)
 			this.inGame = false; // la partita si è conclusa
 		
 		if (t == this.segreto) {
@@ -77,10 +86,6 @@ public class Model {
 		return inGame;
 	}
 
-	public int getTentativi () {
-		return tentativi;
-	}
-
 	public int getNMAX() {
 		return NMAX;
 	}
@@ -92,6 +97,22 @@ public class Model {
 	public int getSegreto () {
 		return segreto;
 	}
+
+// RESTITUISCE IL CONTENUTO E IL RIFERIMENTO A TENTATIVI COME INTEGERPROPERTY	
+	public final IntegerProperty tentativiProperty() {
+		return this.tentativi;
+	}
+
+// QUESTI DUE METODI SONO SIMILI AI METODI GET E SET DI TENTATIVI DICHIARATO COME 
+// VARIABILE INT
+	public final int getTentativi() {
+		return this.tentativiProperty().get();
+	}
+	
+	public final void setTentativi(final int tentativi) {
+		this.tentativiProperty().set(tentativi);
+	}
+	
 	
 	
 }

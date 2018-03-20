@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.util.converter.NumberStringConverter;
 
 public class IndoNumeroController {
 
@@ -84,7 +85,9 @@ public class IndoNumeroController {
     		}
     		
     		int risultato = model.tentativo(num);
-    		txtCur.setText(String.format("%d", model.getTentativi()));
+
+// NON LO AGGIORNO POICHE' EFFETTUO UN BINDING CHE AGGIORNA TUTTO IN AUTOMATICO
+//    		txtCur.setText(String.format("%d", model.getTentativi()));
     		
     		if (risultato == 0)
     			txtLog.appendText("Hai vinto!\n");
@@ -127,6 +130,11 @@ public class IndoNumeroController {
 	
     public void setModel(Model model) {
 		this.model = model;
-	}
+
+// EFFETTUO UN BINDING, collego la proprietà del valore corrente con la 
+// proprietà di tentativiProperty
+		txtCur.textProperty().bindBidirectional(model.tentativiProperty(), new NumberStringConverter());
+    }
+    
     
 }
